@@ -18,6 +18,14 @@ class List {
     var card = new Card(text);
     this.cards.push(card);
   }
+
+  findCard(cardId) {
+    return this.cards.find(function(card) {
+      if (cardId === card.id) {
+        return card;
+      }
+    });
+  }
 }
 
 List.lastId = 0;
@@ -33,13 +41,35 @@ class Board {
     this.lists.push(list);
   }
 
-  addCard(listId, cardText) {
-    this.lists.forEach(function(list) {
-      if (listId === list.id) {
-        list.addCard(cardText);
-      }
+  findList(listId) {
+    return this.lists.find(function(list) {
+      return listId === list.id;
     })
   }
+
+  editList(listId, newTitle) {
+    var list = this.findList(listId);
+    if (list) {
+      list.title = newTitle;
+    }
+  }
+
+  addCard(listId, cardText) {
+    var list = this.findList(listId);
+    if (list) {
+      list.addCard(cardText);
+    }
+  }
+
+  editCard(cardId, cardText) {
+    this.lists.forEach(function(list) {
+      var card = list.findCard(cardId);
+      if (card) {
+        card.text = cardText;
+      }
+    });
+  }
 }
+
 
 Board.lastId = 0;
